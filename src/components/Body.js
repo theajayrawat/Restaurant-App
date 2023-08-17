@@ -1,17 +1,54 @@
-import RestaurantCard from "./RestrauntCard";
-import { restaurantList } from "../constant";
-import { useState } from "react";
+import RestrauntCard from "./RestrauntCard";
+import { useEffect, useState } from "react";
+import Shimmer from "./Shimmer";
+import { swiggy_api_URL } from "../constant";
 
 function filterData(searchText, restaurants) {
-    const filterData = restaurants.filter((restaurant) =>
-      restaurant?.data?.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    return filterData;
-  }
+  const resFilterData = restaurants.filter((restaurant) =>
+    restaurant?.info?.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  return resFilterData;
+}
 
 const Body = () => {
   const [searchText, setSearchText] = useState("");
-  const [restaurants, setRestaurants] = useState(restaurantList);
+  const [allRestaurants, setAllRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+
+  useEffect(() => {
+    getRestaurants();
+  }, []);
+
+  async function getRestaurants() {
+    try {
+      const response = await fetch(swiggy_api_URL);
+      const json = await response.json();
+
+      async function checkJsonData(jsonData) {
+        for (let i = 0; i < jsonData?.data?.cards.length; i++) {
+          let checkData =
+            json?.data?.cards[i]?.card?.card?.gridElements?.infoWithStyle
+              ?.restaurants;
+
+          if (checkData !== undefined) {
+            return checkData;
+          }
+        }
+      }
+
+      const resData = await checkJsonData(json);
+
+      setAllRestaurants(resData);
+      setFilteredRestaurants(resData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (!allRestaurants) return null;
+  else if (filteredRestaurants?.length === 0 && allRestaurants?.length !== 0)
+    return <h1>No Match!!!</h1>;
+
   return (
     <>
       <div className="search-container">
@@ -20,28 +57,30 @@ const Body = () => {
           className="search-input"
           placeholder="Search a restaurant you want..."
           value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
-        />
-      </div>
-
-      <div>
+          onChange={(e) => setSearchText(e.target.value)}
+        ></input>
         <button
+          className="search-btn"
           onClick={() => {
-            const data = filterData(searchText, restaurants);
-            setRestaurants(data);
+            const data = filterData(searchText, allRestaurants);
+            setFilteredRestaurants(data);
           }}
         >
           Search
         </button>
       </div>
 
-      <div className="restaurant-list">
-        {restaurants.map((restaurant) => {
-          return (
-            <RestaurantCard {...restaurant.data} key={restaurant.data.id} />
-          );
-        })}
-      </div>
+      {allRestaurants?.length === 0 ? (
+        <Shimmer />
+      ) : (
+        <div className="restaurant-list">
+          {filteredRestaurants.map((restaurant) => {
+            return (
+              <RestrauntCard key={restaurant?.info?.id} {...restaurant?.info} />
+            );
+          })}
+        </div>
+      )}
     </>
   );
 };
