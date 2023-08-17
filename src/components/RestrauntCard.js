@@ -6,8 +6,6 @@ const RestrauntCard = ({
   cuisines,
   areaName,
   sla,
-  costForTwo,
-  avgRatingString,
 }) => {
   return (
     <div className="card">

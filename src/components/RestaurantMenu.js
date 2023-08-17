@@ -1,0 +1,123 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // import useParams for read `resId`
+import {
+  swiggy_menu_api_URL,
+  IMG_CDN_URL,
+  ITEM_IMG_CDN_URL,
+  MENU_ITEM_TYPE_KEY,
+  RESTAURANT_TYPE_KEY,
+} from "../constant";
+import {MenuShimmer} from "./Shimmer";
+
+const RestaurantMenu = () => {
+  const { resId } = useParams(); // call useParams and get value of restaurant id using object destructuring
+  const [restaurant, setRestaurant] = useState(null); // call useState to store the api data in res
+  const [menuItems, setMenuItems] = useState([]);
+  useEffect(() => {
+    getRestaurantInfo(); // call getRestaurantInfo function so it fetch api data and set data in restaurant state variable
+  }, []);
+
+  async function getRestaurantInfo() {
+    try {
+      const response = await fetch(swiggy_menu_api_URL + resId);
+      const json = await response.json();
+
+      // Set restaurant data
+      const restaurantData = json?.data?.cards?.map(x => x.card)?.
+                             find(x => x && x.card['@type'] === RESTAURANT_TYPE_KEY)?.card?.info || null;
+      setRestaurant(restaurantData);
+
+      // Set menu item data
+      const menuItemsData = json?.data?.cards.find(x=> x.groupedCard)?.
+                            groupedCard?.cardGroupMap?.REGULAR?.
+                            cards?.map(x => x.card?.card)?.
+                            filter(x=> x['@type'] == MENU_ITEM_TYPE_KEY)?.
+                            map(x=> x.itemCards).flat().map(x=> x.card?.info) || [];
+      
+      const uniqueMenuItems = [];
+      menuItemsData.forEach((item) => {
+        if (!uniqueMenuItems.find(x => x.id === item.id)) {
+          uniqueMenuItems.push(item);
+        }
+      })
+      setMenuItems(uniqueMenuItems);
+    } catch (error) {
+      setMenuItems([]);
+      setRestaurant(null);
+      console.log(error);
+    }
+  }
+
+  return !restaurant ? (
+    <MenuShimmer />
+  ) : (
+    <div >
+      <div >
+        <img
+          src={IMG_CDN_URL + restaurant?.cloudinaryImageId}
+          alt={restaurant?.name}
+        />
+        <div >
+          <h2 >{restaurant?.name}</h2>
+          <p >{restaurant?.cuisines?.join(", ")}</p>
+          <div >
+            <div  style={
+            (restaurant?.avgRating) < 4
+              ? { backgroundColor: "var(--light-red)" }
+              : (restaurant?.avgRating) === "--"
+              ? { backgroundColor: "white", color: "black" }
+              : { color: "white" }
+          }>
+         
+              <span>{restaurant?.avgRating}</span>
+            </div>
+            <div >|</div>
+            <div>{restaurant?.sla?.slaString}</div>
+            <div >|</div>
+            <div>{restaurant?.costForTwoMessage}</div>
+          </div>
+        </div>
+      </div>
+
+      <div >
+        <div >
+          <div >
+            <h3 >Recommended</h3>
+            <p >
+              {menuItems.length} ITEMS
+            </p>
+          </div>
+          <div>
+            {menuItems.map((item) => (
+              <div key={item?.id}>
+                <div >
+                  <h3 >{item?.name}</h3>
+                  <p >
+                    {item?.price > 0
+                      ? new Intl.NumberFormat("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        }).format(item?.price / 100)
+                      : " "}
+                  </p>
+                  <p >{item?.description}</p>
+                </div>
+                <div >
+                  {item?.imageId && (
+                    <img
+                      src={ITEM_IMG_CDN_URL + item?.imageId}
+                      alt={item?.name}
+                    />
+                  )}
+                  <button > ADD +</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RestaurantMenu;
