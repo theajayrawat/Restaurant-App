@@ -12,6 +12,7 @@ import RestaurantMenu from "./components/RestaurantMenu";
 import useOnline from "./utils/useOnline";
 import UserOffline from "./components/UserOffline";
 import Shimmer from "./components/Shimmer";
+import Profile from "./components/Profile";
 
 // Lazy Loading
 const About = lazy(() => import("./components/About"));
@@ -51,6 +52,10 @@ const appRouter = createBrowserRouter([
             <About />
           </Suspense>
         ),
+        children: [{ // nested routing
+          path: "profile",
+          element: <Profile />,
+        }]
       },
       {
         path: "/contact",

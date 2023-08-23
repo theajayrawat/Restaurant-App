@@ -28,3 +28,22 @@ export const MENU_ITEM_TYPE_KEY =
 export const RESTAURANT_TYPE_KEY =
   "type.googleapis.com/swiggy.presentation.food.v2.Restaurant";
 
+  // Github - username
+export const Github_UserName = "theajayrawat";
+
+// Github API for User
+export const Github_API_User = "https://api.github.com/users/";
+
+// Social Media Links
+export const Linkedin_Link = "https://www.linkedin.com/in/theajayrawat/";
+export const Twitter_Link = "https://twitter.com/theajayrawat";
+export const Github_Link = "https://github.com/theajayrawat/";
+export const Email_Link = "mailto:theajayrawat@gmail.com";
+
+// Github Authorization Token
+export const options = {
+  method: "GET",
+  headers: {
+    Authorization: "",
+  },
+};
