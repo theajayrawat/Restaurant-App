@@ -1,54 +1,40 @@
 import RestrauntCard from "./RestrauntCard";
-import { useEffect, useState } from "react";
-import Shimmer from "./Shimmer";
+import { useState } from "react"; 
+import Shimmer from "./Shimmer"; 
 import { swiggy_api_URL } from "../constant";
 import { Link } from "react-router-dom";
+import { filterData } from "../utils/helper";
+import useResData from "../utils/useResData"; 
 
-function filterData(searchText, restaurants) {
-  const resFilterData = restaurants.filter((restaurant) =>
-    restaurant?.info?.name.toLowerCase().includes(searchText.toLowerCase())
-  );
-  return resFilterData;
-}
+
 
 const Body = () => {
+
   const [searchText, setSearchText] = useState("");
-  const [allRestaurants, setAllRestaurants] = useState([]);
-  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [allRestaurants, FilterRes] = useResData(swiggy_api_URL);
+  const [filteredRestaurants, setFilteredRestaurants] = useState(null);
+ 
 
-  useEffect(() => {
-    getRestaurants();
-  }, []);
-
-  async function getRestaurants() {
-    try {
-      const response = await fetch(swiggy_api_URL);
-      const json = await response.json();
-
-      async function checkJsonData(jsonData) {
-        for (let i = 0; i < jsonData?.data?.cards.length; i++) {
-          let checkData =
-            json?.data?.cards[i]?.card?.card?.gridElements?.infoWithStyle
-              ?.restaurants;
-
-          if (checkData !== undefined) {
-            return checkData;
-          }
-        }
+  
+  const searchData = (searchText, restaurants) => {
+    if (searchText !== "") {
+      const filteredData = filterData(searchText, restaurants);
+      setFilteredRestaurants(filteredData);
+      setErrorMessage("");
+      if (filteredData?.length === 0) {
+        setErrorMessage(
+          `Sorry, we couldn't find any results for "${searchText}"`
+        );
       }
-
-      const resData = await checkJsonData(json);
-
-      setAllRestaurants(resData);
-      setFilteredRestaurants(resData);
-    } catch (error) {
-      console.log(error);
+    } else {
+      setErrorMessage("");
+      setFilteredRestaurants(restaurants);
     }
-  }
+  };
 
+ 
   if (!allRestaurants) return null;
-  else if (filteredRestaurants?.length === 0 && allRestaurants?.length !== 0)
-    return <h1>No Match!!!</h1>;
 
   return (
     <>
@@ -58,34 +44,43 @@ const Body = () => {
           className="search-input"
           placeholder="Search a restaurant you want..."
           value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          
+          onChange={(e) => {
+            setSearchText(e.target.value);
+            searchData(e.target.value, allRestaurants);
+          }}
         ></input>
         <button
           className="search-btn"
           onClick={() => {
-            const data = filterData(searchText, allRestaurants);
-            setFilteredRestaurants(data);
+           
+            searchData(searchText, allRestaurants);
           }}
         >
           Search
         </button>
       </div>
+      {errorMessage && <div className="error-container">{errorMessage}</div>}
 
-      {allRestaurants?.length === 0 ? (
+      {/* if restaurants data are fetched then display restaurants cards otherwise display Shimmer UI */}
+      {allRestaurants?.length === 0 && FilterRes?.length === 0 ? (
         <Shimmer />
       ) : (
-        
         <div className="restaurant-list">
-          {filteredRestaurants.map((restaurant) => {
-            return (
-              <Link
-              to={"/restaurant/" + restaurant?.info?.id}
-              key={restaurant?.info?.id}
-            >  
-              <RestrauntCard key={restaurant?.info?.id} {...restaurant?.info} />
-              </Link>
-            );
-          })}
+          {/* We are mapping restaurants array and passing JSON array data to RestaurantCard component as props with unique key as restaurant.data.id */}
+          {(filteredRestaurants === null ? FilterRes : filteredRestaurants).map(
+            (restaurant) => {
+              return (
+                <Link
+                  to={"/restaurant/" + restaurant?.info?.id}
+                  key={restaurant?.info?.id}
+                >
+                  {/* if we click on any restaurant card it will redirect to that restaurant menu page */}
+                  <RestrauntCard {...restaurant?.info} />
+                </Link>
+              );
+            }
+          )}
         </div>
       )}
     </>
@@ -93,3 +88,4 @@ const Body = () => {
 };
 
 export default Body;
+
