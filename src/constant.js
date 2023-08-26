@@ -1,6 +1,7 @@
 // Image CDN URL for Logo
 export const IMG_LOGO = "https://m.media-amazon.com/images/I/51K9YDu2QZL.jpg";
 export const IMG_FOOD="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YnVyZ2VyfGVufDB8fDB8fHww&w=1000&q=80";
+export const IMG_CON="https://wjarr.com/sites/default/files/Contact-Us.jpg";
 
 // Image CDN URL for Restaurant card
 export const IMG_CDN_URL =
@@ -9,7 +10,7 @@ export const IMG_CDN_URL =
 export const ITEM_IMG_CDN_URL =
   "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/";
 
-
+  
 // Swiggy API to get Restaurant data with corsproxy
 export const swiggy_api_URL =
   "https://corsproxy.io/?https://www.swiggy.com/dapi/restaurants/list/v5?lat=21.1702401&lng=72.83106070000001&page_type=DESKTOP_WEB_LISTING";

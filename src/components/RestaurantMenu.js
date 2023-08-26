@@ -31,8 +31,11 @@ const RestaurantMenu = () => {
   return !restaurant ? (
     <MenuShimmer />
   ) : (
-    <div >
-      <div >
+    <div style={{"display": "flex",
+      "flex-wrap": "wrap",
+      "gap": "15px",
+      "justify-content": "center"}}>
+      <div>
         <img
           src={IMG_CDN_URL + restaurant?.cloudinaryImageId}
           alt={restaurant?.name}
@@ -40,34 +43,27 @@ const RestaurantMenu = () => {
         <div >
           <h2 >{restaurant?.name}</h2>
           <p >{restaurant?.cuisines?.join(", ")}</p>
-          <div >
-            <div  style={
-            (restaurant?.avgRating) < 4
-              ? { backgroundColor: "var(--light-red)" }
-              : (restaurant?.avgRating) === "--"
-              ? { backgroundColor: "white", color: "black" }
-              : { color: "white" }
-          }>
-         
-              <span>{restaurant?.avgRating}</span>
-            </div>
-            <div >|</div>
-            <div>{restaurant?.sla?.slaString}</div>
-            <div >|</div>
-            <div>{restaurant?.costForTwoMessage}</div>
+          <div>
+            <span>⭐</span>&nbsp;
+              <span>{restaurant?.avgRating}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{restaurant?.sla?.slaString}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>{restaurant?.costForTwoMessage}</span>
           </div>
         </div>
       </div>
 
-      <div >
-        <div >
+      <div style={{"display": "flex",
+      "flex-wrap": "wrap",
+      "gap": "15px",
+      "justify-content": "center"}} >
+        <div  >
           <div >
             <h3 >Recommended</h3>
             <p >
               {menuItems.length} ITEMS
             </p>
           </div>
-          <div>
+          <div >
             {menuItems.map((item) => (
               <div key={item?.id}>
                 <div >
@@ -82,7 +78,10 @@ const RestaurantMenu = () => {
                   </p>
                   <p >{item?.description}</p>
                 </div>
-                <div >
+                <div style={{"display": "flex",
+      "flex-wrap": "wrap",
+      "gap": "15px",
+      "justify-content": "center"}}>
                   {item?.imageId && (
                     <img
                       src={ITEM_IMG_CDN_URL + item?.imageId}

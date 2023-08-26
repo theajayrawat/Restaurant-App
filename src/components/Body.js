@@ -47,7 +47,7 @@ const Body = () => {
           
           onChange={(e) => {
             setSearchText(e.target.value);
-            searchData(e.target.value, allRestaurants);
+            
           }}
         ></input>
         <button
@@ -71,7 +71,7 @@ const Body = () => {
           {(filteredRestaurants === null ? FilterRes : filteredRestaurants).map(
             (restaurant) => {
               return (
-                <Link
+                <Link style={{"text-decoration": "none"}}
                   to={"/restaurant/" + restaurant?.info?.id}
                   key={restaurant?.info?.id}
                 >

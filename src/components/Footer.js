@@ -8,7 +8,7 @@ const Footer = () => {
         href="https://www.linkedin.com/in/theajayrawat/"
         target="_blank"
         title="Ajay Rawat's Linkedin Profile"
-      >
+      >&nbsp;
         Ajay Rawat
       </a>
     </div>

@@ -1,6 +1,12 @@
+import { IMG_CON } from "../constant";
+import Form from "./ContactForm";
+
 const Contact = () =>{
     return(
-        <h1>Contact Us Page</h1>
+        <>
+        <img src={IMG_CON} alt="Contact Us Image"/>
+        <Form/>
+        </>
     )
 }
 
