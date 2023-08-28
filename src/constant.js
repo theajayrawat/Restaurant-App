@@ -1,6 +1,6 @@
 // Image CDN URL for Logo
 export const IMG_LOGO = "https://m.media-amazon.com/images/I/51K9YDu2QZL.jpg";
-export const IMG_FOOD="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YnVyZ2VyfGVufDB8fDB8fHww&w=1000&q=80";
+export const IMG_FOOD="https://netstorage-tuko.akamaized.net/images/a45120bd6c409fc5.jpg?imwidth=900";
 export const IMG_CON="https://wjarr.com/sites/default/files/Contact-Us.jpg";
 
 // Image CDN URL for Restaurant card
