@@ -5,11 +5,14 @@ import {
   ITEM_IMG_CDN_URL,
   MENU_ITEM_TYPE_KEY,
   RESTAURANT_TYPE_KEY,
+  ALT_ITEM_IMG_CDN_URL,
 } from "../constant";
 import {MenuShimmer} from "./Shimmer";
 import useResMenuData  from "../utils/useResMenuData";
 import useOnline from "../utils/useOnline"; // imported custom hook useOnline which checks user is online or not
 import UserOffline from "./UserOffline";
+import { addItem,removeItem} from "../utils/cartSlice";
+import { useDispatch } from "react-redux";
 
 const RestaurantMenu = () => {
   const { resId } = useParams(); // call useParams and get value of restaurant id using object destructuring
@@ -27,14 +30,28 @@ const RestaurantMenu = () => {
     return <UserOffline />
   }
 
+  const dispatch=useDispatch();
+
+  const handleAddItem=(item)=>{
+    dispatch(addItem("0"));
+  }
+
+  const handleRemoveItem=(item)=>{
+    dispatch(removeItem("0"));
+  }
+
+  const style= {
+    "display": "flex",
+      "flexWrap": "wrap",
+      "gap": "15px",
+      "justifyContent": "center"
+  }
+
 
   return !restaurant ? (
     <MenuShimmer />
   ) : (
-    <div style={{"display": "flex",
-      "flex-wrap": "wrap",
-      "gap": "15px",
-      "justify-content": "center"}}>
+    <div style={style}>
       <div>
         <img
           src={IMG_CDN_URL + restaurant?.cloudinaryImageId}
@@ -52,10 +69,7 @@ const RestaurantMenu = () => {
         </div>
       </div>
 
-      <div style={{"display": "flex",
-      "flex-wrap": "wrap",
-      "gap": "15px",
-      "justify-content": "center"}} >
+      <div style={style} >
         <div  >
           <div >
             <h3 >Recommended</h3>
@@ -78,17 +92,18 @@ const RestaurantMenu = () => {
                   </p>
                   <p >{item?.description}</p>
                 </div>
-                <div style={{"display": "flex",
-      "flex-wrap": "wrap",
-      "gap": "15px",
-      "justify-content": "center"}}>
-                  {item?.imageId && (
+                <div style={style}>
+                  {item?.imageId===undefined ? (<img
+                      src={ALT_ITEM_IMG_CDN_URL}
+                      alt={item?.name}
+                    />) : (
                     <img
-                      src={ITEM_IMG_CDN_URL + item?.imageId}
+                      src={ITEM_IMG_CDN_URL + item.imageId}
                       alt={item?.name}
                     />
                   )}
-                  <button > ADD +</button>
+                  <button onClick={()=>handleAddItem(item)}> Add +</button>
+                  <button onClick={()=>handleRemoveItem(item)}> Remove -</button>
                 </div>
               </div>
             ))}

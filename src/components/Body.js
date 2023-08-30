@@ -71,7 +71,7 @@ const Body = () => {
           {(filteredRestaurants === null ? FilterRes : filteredRestaurants).map(
             (restaurant) => {
               return (
-                <Link style={{"text-decoration": "none"}}
+                <Link style={{"textDecoration": "none"}}
                   to={"/restaurant/" + restaurant?.info?.id}
                   key={restaurant?.info?.id}
                 >

@@ -10,6 +10,8 @@ export const IMG_CDN_URL =
 export const ITEM_IMG_CDN_URL =
   "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/";
 
+  export const ALT_ITEM_IMG_CDN_URL="https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+
   
 // Swiggy API to get Restaurant data with corsproxy
 export const swiggy_api_URL =

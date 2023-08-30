@@ -13,6 +13,8 @@ import useOnline from "./utils/useOnline";
 import UserOffline from "./components/UserOffline";
 import Shimmer from "./components/Shimmer";
 import Profile from "./components/Profile";
+import {Provider} from "react-redux";
+import store from "./utils/store";
 
 // Lazy Loading
 const About = lazy(() => import("./components/About"));
@@ -26,9 +28,11 @@ const AppLayout = () => {
         <UserOffline />
       ) : (
         <>
+        <Provider store={store}>
           <Header />
           <Outlet />
           <Footer />
+        </Provider>
         </>
       )}
     </>
